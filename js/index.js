@@ -1,5 +1,7 @@
 const picContainerEl = document.getElementById("jsPicContainerEl");
 
+let isUsingCanvas1 = true;
+
 let state = {
   isMousedown: false,
   mouseDownX: picContainerEl.offsetLeft,
@@ -11,13 +13,26 @@ let state = {
 let canvas1 = document.createElement("canvas");
 canvas1.classList.add("canvas-coordinate");
 canvas1.style.top = state.originY;
-picContainerEl.appendChild(canvas1);
 canvas1.setAttribute("width", "0px");
 canvas1.setAttribute("height", "0px");
+picContainerEl.appendChild(canvas1);
+
+
+let canvas2 = document.createElement("canvas");
+canvas2.classList.add("canvas-coordinate");
+canvas2.style.top = state.originY;
+canvas2.setAttribute("width", "0px");
+canvas2.setAttribute("height", "0px");
+picContainerEl.appendChild(canvas2);
+
 
 /* picContainerEl.addEventListener("mousemove", () => {
   console.log("mousemove:");
 }); */
+
+document.getElementById("canvas2").addEventListener("click", () => {
+  isUsingCanvas1 = !isUsingCanvas1;
+});
 
 picContainerEl.addEventListener("mousedown", event => {
   const x = event.clientX;
@@ -40,11 +55,21 @@ picContainerEl.addEventListener("mousemove", event => {
     const width = mouseX - state.mouseDownX;
     const height = mouseY - state.mouseDownY;
 
-    canvas1.setAttribute("width", `${width}px`);
-    canvas1.setAttribute("height", `${height}px`);
-    canvas1.style.borderWidth = "1px";
-    canvas1.style.top = `${state.mouseDownY}px`;
-    canvas1.style.left = `${state.mouseDownX}px`;
+    if (isUsingCanvas1) {
+      canvas1.setAttribute("width", `${width}px`);
+      canvas1.setAttribute("height", `${height}px`);
+      canvas1.style.borderWidth = "1px";
+      canvas1.style.top = `${state.mouseDownY}px`;
+      canvas1.style.left = `${state.mouseDownX}px`;
+    }else{
+      canvas2.setAttribute("width", `${width}px`);
+      canvas2.setAttribute("height", `${height}px`);
+      canvas2.style.borderWidth = "1px";
+      canvas2.style.borderColor = "red";
+      canvas2.style.top = `${state.mouseDownY}px`;
+      canvas2.style.left = `${state.mouseDownX}px`;
+      
+    }
   }
 });
 
