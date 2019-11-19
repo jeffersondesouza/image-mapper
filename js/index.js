@@ -1,99 +1,57 @@
-(function() {
-  const canvas = document.getElementById("canvas");
-  const canvas2 = document.getElementById("canvas");
-  const context = canvas.getContext("2d");
-  const context2 = canvas.getContext("2d");
+const picContainerEl = document.getElementById("jsPicContainerEl");
 
-  const canvasX = canvas.offsetLeft;
-  const canvasY = canvas.offsetTop;
-  let rect1 = [];
-  let rect2 = [];
-  let isContext2 = false;
+let state = {
+  isMousedown: false,
+  mouseDownX: picContainerEl.offsetLeft,
+  mouseDownY: picContainerEl.offsetTop,
+  originX: picContainerEl.offsetLeft,
+  originY: picContainerEl.offsetTop
+};
 
-  let state = {
-    isMousedown: false,
-    mouseDownX: 0,
-    mouseDownY: 0
-  };
+let canvas1 = document.createElement("canvas");
+canvas1.classList.add("canvas-coordinate");
+canvas1.style.top = state.originY;
+picContainerEl.appendChild(canvas1);
+canvas1.setAttribute("width", "0px");
+canvas1.setAttribute("height", "0px");
 
-  const setState = newState => {
-    if (!newState || typeof newState !== "object") {
-      return;
-    }
-    state = { ...state, ...newState };
-  };
+/* picContainerEl.addEventListener("mousemove", () => {
+  console.log("mousemove:");
+}); */
 
-  document.getElementById("context1").addEventListener("click", () => {
-    isContext2 = false;
+picContainerEl.addEventListener("mousedown", event => {
+  const x = event.clientX;
+  const y = event.clientY;
+  setState({
+    isMousedown: true,
+    mouseDownX: x - state.originX,
+    mouseDownY: y - state.originY
   });
+});
 
-  document.getElementById("context2").addEventListener("click", () => {
-    isContext2 = true;
-  });
+picContainerEl.addEventListener("mouseup", event => {
+  setState({ isMousedown: false });
+});
 
-  canvas.addEventListener("mousedown", event => {
-    const x = event.clientX;
-    const y = event.clientY;
-    setState({
-      isMousedown: true,
-      mouseDownX: x - canvasX,
-      mouseDownY: y - canvasY
-    });
-  });
+picContainerEl.addEventListener("mousemove", event => {
+  if (state.isMousedown) {
+    const mouseX = parseInt(event.clientX - state.originX);
+    const mouseY = parseInt(event.clientY - state.originY);
+    const width = mouseX - state.mouseDownX;
+    const height = mouseY - state.mouseDownY;
 
-  canvas.addEventListener("mouseup", event => {
-    console.log("mouseup:", state.isMousedown);
-    setState({ isMousedown: false });
-  });
+    canvas1.setAttribute("width", `${width}px`);
+    canvas1.setAttribute("height", `${height}px`);
+    canvas1.style.borderWidth = "1px";
+    canvas1.style.top = `${state.mouseDownY}px`;
+    canvas1.style.left = `${state.mouseDownX}px`;
+  }
+});
 
-  canvas.addEventListener("mousemove", event => {
-    if (state.isMousedown) {
-      if (!isContext2) {
-        if (rect2.length) {
-        }
-        if (rect2.length) {
-          console.log('rect2:', rect2)
-          context2.clearRect(rect2[0], rect2[1], rect2[2], rect2[3]);
-        }
-
-        const mouseX = parseInt(event.clientX - canvasX);
-        const mouseY = parseInt(event.clientY - canvasY);
-
-        const width = mouseX - state.mouseDownX;
-        const height = mouseY - state.mouseDownY;
-
-        context2.beginPath();
-
-        context2.rect(state.mouseDownX, state.mouseDownY, width, height);
-
-        rect2 = [state.mouseDownX, state.mouseDownY, width, height];
-
-        context2.strokeStyle = "black";
-        context2.lineWidth = 1;
-        context2.stroke();
-      } else {
-        if (rect1.length) {
-          console.log('rect1:', rect1)
-          context.clearRect(rect1[0], rect1[1], rect1[2], rect1[3]);
-        }
-
-        const mouseX = parseInt(event.clientX - canvasX);
-        const mouseY = parseInt(event.clientY - canvasY);
-
-        const width = mouseX - state.mouseDownX;
-        const height = mouseY - state.mouseDownY;
-
-        context.beginPath();
-
-        context.rect(state.mouseDownX, state.mouseDownY, width, height);
-        rect1 = [state.mouseDownX, state.mouseDownY, width, height];
-
-        context.strokeStyle = "red";
-        context.lineWidth = 1;
-        context.stroke();
-      }
-    }
-  });
-
-  context.fillRect(0, 0, 40, 40);
-})();
+/* UTILS */
+const setState = newState => {
+  if (!newState || typeof newState !== "object") {
+    return;
+  }
+  state = { ...state, ...newState };
+};

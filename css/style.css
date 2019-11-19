@@ -4,13 +4,29 @@ body {
 }
 
 
-.canvas-wrapper {
+.pic-container {
   position: relative;
   width: 800px;
   height: 700px;
   overflow: auto;
 }
 
+.canvas-coordinate {
+  position: absolute;
+  border: 0px solid #000000;
+  z-index: 11;
+}
+
 .canvas {
   border: 1px solid #d3d3d3;
+}
+
+.coordenate-picture {
+  /* cursor: crosshair; */
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
