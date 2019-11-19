@@ -11,10 +11,10 @@ body {
   overflow: auto;
 }
 
-.canvas-coordinate {
+.information-coordinate {
   position: absolute;
   border: 0px solid #000000;
-  z-index: 11;
+  z-index: 9999;
 }
 
 .canvas {

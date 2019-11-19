@@ -1,33 +1,19 @@
 (function() {
   const picContainerEl = document.getElementById("jsPicContainerEl");
 
-  let isUsingCanvas1 = true;
-
   let state = {
     isMousedown: false,
     mouseDownX: picContainerEl.offsetLeft,
     mouseDownY: picContainerEl.offsetTop,
     originX: picContainerEl.offsetLeft,
-    originY: picContainerEl.offsetTop
+    originY: picContainerEl.offsetTop,
+    inforAreas: [buildInfoAreaEl("black"), buildInfoAreaEl("red")]
   };
 
-  let canvas1 = document.createElement("canvas");
-  canvas1.classList.add("canvas-coordinate");
-  canvas1.style.top = state.originY;
-  canvas1.setAttribute("width", "0px");
-  canvas1.setAttribute("height", "0px");
-  picContainerEl.appendChild(canvas1);
+  let isUsingCanvas1 = true;
 
-  let canvas2 = document.createElement("canvas");
-  canvas2.classList.add("canvas-coordinate");
-  canvas2.style.top = state.originY;
-  canvas2.setAttribute("width", "0px");
-  canvas2.setAttribute("height", "0px");
-  picContainerEl.appendChild(canvas2);
-
-  /* picContainerEl.addEventListener("mousemove", () => {
-  console.log("mousemove:");
-}); */
+  picContainerEl.appendChild(state.inforAreas[0]);
+  picContainerEl.appendChild(state.inforAreas[1]);
 
   document.getElementById("canvas2").addEventListener("click", () => {
     isUsingCanvas1 = !isUsingCanvas1;
@@ -55,18 +41,9 @@
       const height = mouseY - state.mouseDownY;
 
       if (isUsingCanvas1) {
-        canvas1.setAttribute("width", `${width}px`);
-        canvas1.setAttribute("height", `${height}px`);
-        canvas1.style.borderWidth = "1px";
-        canvas1.style.top = `${state.mouseDownY}px`;
-        canvas1.style.left = `${state.mouseDownX}px`;
+        drawInformationArea(state.inforAreas[0], width, height, state);
       } else {
-        canvas2.setAttribute("width", `${width}px`);
-        canvas2.setAttribute("height", `${height}px`);
-        canvas2.style.borderWidth = "1px";
-        canvas2.style.borderColor = "red";
-        canvas2.style.top = `${state.mouseDownY}px`;
-        canvas2.style.left = `${state.mouseDownX}px`;
+        drawInformationArea(state.inforAreas[1], width, height, state);
       }
     }
   });
@@ -78,4 +55,25 @@
     }
     state = { ...state, ...newState };
   };
+
+  function buildInfoAreaEl(color) {
+    let infoArea = document.createElement("canvas");
+    infoArea.setAttribute("width", "0px");
+    infoArea.setAttribute("height", "0px");
+    infoArea.style.position = "absolute";
+    infoArea.style.top = "0px";
+    infoArea.style.borderWidth = "0px";
+    infoArea.style.borderColor = color;
+    infoArea.style.borderStyle = "solid";
+    infoArea.style.zIndex = "9999";
+    return infoArea;
+  }
+
+  function drawInformationArea(informtionAreaEl, width, height, state) {
+    informtionAreaEl.setAttribute("width", `${width}px`);
+    informtionAreaEl.setAttribute("height", `${height}px`);
+    informtionAreaEl.style.borderWidth = "1px";
+    informtionAreaEl.style.top = `${state.mouseDownY}px`;
+    informtionAreaEl.style.left = `${state.mouseDownX}px`;
+  }
 })();
